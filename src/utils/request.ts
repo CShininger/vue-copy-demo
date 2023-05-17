@@ -5,21 +5,16 @@ function getQueryString(name: string): number {
   if (r != null) return Number(unescape(r[2]));
   return 0;
 }
-let baseURL = "http://123.56.85.24:5000/api/";
-if (getQueryString("ip") == 1) {
-  baseURL = "http://123.56.85.24:5000/api/";
-} else if (getQueryString("ip") == 2) {
-  baseURL = "http://fq.lycent.cn/api";
-} else {
-  baseURL = "http://123.56.85.24:5000/api";
-}
+
+const baseURL = "http://localhost:4000";
+
 const service = axios.create({
   baseURL,
-  timeout: 5000 // request timeout
+  timeout: 5000, // request timeout
 });
 // 发起请求之前的拦截器
 service.interceptors.request.use(
-  config => {
+  (config) => {
     // 如果有token 就携带tokon
     const token = window.localStorage.getItem("accessToken");
     if (token) {
@@ -27,11 +22,11 @@ service.interceptors.request.use(
     }
     return config;
   },
-  error => Promise.reject(error)
+  (error) => Promise.reject(error)
 );
 // 响应拦截器
 service.interceptors.response.use(
-  response => {
+  (response) => {
     const res = response.data;
 
     if (response.status !== 200) {
@@ -40,7 +35,7 @@ service.interceptors.response.use(
       return res;
     }
   },
-  error => {
+  (error) => {
     return Promise.reject(error);
   }
 );
